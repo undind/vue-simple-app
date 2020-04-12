@@ -1,24 +1,60 @@
 <template>
-    <nav class="navbar">
-        <b-button type="is-primary" inverted outlined>
+    <nav class="my-navbar">
+        <b-button
+            v-if="hideAddBtn === false"
+            @click.prevent="replaceToPostEditAdd()"
+            type="is-primary"
+            inverted
+            outlined
+        >
             Добавить пост
         </b-button>
-        <a href="#" class="navbar__link">Логин</a>
+        <router-link
+            v-if="hideBackToHome === false"
+            class="my-navbar__link my-navbar__link_to-home"
+            :to="{ path: '/' }"
+        >
+            На главную
+        </router-link>
+        <a href="#" @click.prevent="replaceToSignIn()" class="my-navbar__link">Логин</a>
     </nav>
 </template>
 
+<script>
+export default {
+    props: {
+        hideAddBtn: {
+            default: false,
+            type: Boolean
+        },
+        hideBackToHome: {
+            default: false,
+            type: Boolean
+        }
+    },
+    methods: {
+        replaceToPostEditAdd() {
+            this.$router.replace('/post');
+        },
+        replaceToSignIn() {
+            this.$router.replace('/signin');
+        }
+    }
+};
+</script>
+
 <style lang="postcss" scoped>
-.navbar {
+.my-navbar {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    height: 40px;
-    background-color: rgb(60, 60, 243);
+    height: 52px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 0 32px;
+    background-color: #167df0;
 
     &__link {
         margin-left: auto;
@@ -26,8 +62,13 @@
         padding: 14px;
 
         &:hover {
-            background-color: rgb(81, 81, 240);
+            background-color: #3e3bff;
             transition: all 0.25s;
+            color: #fff;
+        }
+
+        &_to-home {
+            margin-left: 0;
         }
     }
 }

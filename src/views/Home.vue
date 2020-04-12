@@ -1,9 +1,9 @@
 <template>
     <div>
-        <navbar></navbar>
+        <navbar :hideBackToHome="true"></navbar>
         <div class="container is-fluid">
-            <div class="columns is-mobile">
-                <div class="column is-half is-offset-one-quarter cards__wrapper">
+            <div class="columns is-mobile is-centered">
+                <div class="column is-half-desktop is-two-thirds-tablet is-three-quarters-mobile cards__wrapper">
                     <ul class="cards__list">
                         <li class="cards__item">
                             <h3 class="item__title">Заголовок</h3>
@@ -52,3 +52,47 @@ export default {
     }
 };
 </script>
+
+<style lang="postcss" scoped>
+.cards {
+    &__item {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 3px;
+        margin-bottom: 20px;
+        box-shadow: 0 2.8px 2.2px rgba(0, 0, 0, 0.034);
+
+        .item {
+            &__title {
+                font-size: 26px;
+                font-weight: 500;
+                line-height: 1;
+                margin-bottom: 10px;
+            }
+
+            &__date {
+                font-size: 12px;
+                opacity: 0.6;
+            }
+
+            &__content {
+                margin-bottom: 10px;
+            }
+
+            &__footer {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+
+                .button {
+                    margin-left: 10px;
+
+                    .button__text {
+                        margin-left: 12px;
+                    }
+                }
+            }
+        }
+    }
+}
+</style>
