@@ -1,5 +1,8 @@
 <template>
     <nav class="navbar">
+        <b-button type="is-primary" inverted outlined>
+            Добавить пост
+        </b-button>
         <a href="#" class="navbar__link">Логин</a>
     </nav>
 </template>
@@ -13,6 +16,7 @@
     height: 40px;
     background-color: rgb(60, 60, 243);
     display: flex;
+    justify-content: space-between;
     align-items: center;
     padding: 0 32px;
 
@@ -23,7 +27,7 @@
 
         &:hover {
             background-color: rgb(81, 81, 240);
-            transition: all .25s;
+            transition: all 0.25s;
         }
     }
 }
