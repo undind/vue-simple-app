@@ -1,0 +1,12 @@
+{
+  "text-color": "#000",
+  "menu-color": "#f9f9f9",
+  "info-color": "#248fe3",
+  "blue-color": "#0880f8",
+  "border-color": "#d8d8d8",
+  "links-color": "#4b6fd7",
+  "bp-desktop-hd": "1800px",
+  "bp-desktop": "1200px",
+  "bp-tablets": "768px",
+  "bp-phones": "480px"
+}
