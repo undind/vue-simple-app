@@ -23,7 +23,7 @@
 <script>
 export default {
     props: {
-        totalItems: Number
+        totalItems: Number,
     },
     data() {
         return {
@@ -36,8 +36,8 @@ export default {
             isSimple: false,
             isRounded: false,
             prevIcon: 'chevron-left',
-            nextIcon: 'chevron-right'
+            nextIcon: 'chevron-right',
         };
-    }
+    },
 };
 </script>
