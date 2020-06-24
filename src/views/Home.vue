@@ -55,7 +55,7 @@ export default {
         ...mapState('posts', { posts: (state) => state.posts }),
     },
     methods: {
-        ...mapActions('posts', ['fetchPosts']),
+        ...mapActions('posts', ['fetchPosts', 'deletePost']),
         async fetchData() {
             try {
                 await this.fetchPosts();
@@ -70,7 +70,14 @@ export default {
                 confirmText: 'Delete post',
                 type: 'is-danger',
                 hasIcon: false,
-                onConfirm: () => this.$buefy.toast.open(`Posts <b>${post.title}</b> deleted!`),
+                onConfirm: async () => {
+                    try {
+                        this.deletePost(post._id);
+                        this.$buefy.toast.open(generateTooltipData(`Пост <b>${post.title}</b> удален!`, 'success'))
+                    } catch (error) {
+                        console.log(error)
+                    }
+                },
             });
         },
         moment(date) {

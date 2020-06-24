@@ -1,5 +1,3 @@
-import { intoFormData } from '@/helpers/intoFormData';
-
 export default {
     namespaced: true,
     state: {
@@ -8,6 +6,7 @@ export default {
     mutations: {
         SET_POSTS: (state, posts) => (state.posts = posts),
         CREATE_POST: (state, post) => state.posts.push(post),
+        DELETE_POST: (state, id) => state.posts = state.posts.filter((post) => post._id !== id),
     },
     actions: {
         async fetchPosts({ commit }) {
@@ -24,6 +23,16 @@ export default {
             try {
                 const response = await this.$axios.post(`/api/post/create`, post);
                 commit('CREATE_POST', response.data);
+                return response;
+            } catch (error) {
+                throw error.response.data.message;
+            }
+        },
+
+        async deletePost({ commit }, id) {
+            try {
+                const response = await this.$axios.delete(`/api/post/delete/${id}`);
+                commit('DELETE_POST', id);
                 return response;
             } catch (error) {
                 throw error.response.data.message;

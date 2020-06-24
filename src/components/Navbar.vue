@@ -55,7 +55,7 @@ export default {
     align-items: center;
     padding: 0 32px;
     background-color: #167df0;
-    z-index: 10000;
+    z-index: 39;
 
     &__link {
         margin-left: auto;

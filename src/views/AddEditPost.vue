@@ -54,7 +54,7 @@ export default {
             try {
                 await this.createPost(this.postData);
                 this.$buefy.toast.open(
-                    generateTooltipData(`Пост ${this.postData.title} был успешно создан!`, 'success')
+                    generateTooltipData(`Пост <b>${this.postData.title}</b> был успешно создан!`, 'success')
                 );
             } catch (error) {
                 this.$buefy.toast.open(generateTooltipData(error, 'danger'));
