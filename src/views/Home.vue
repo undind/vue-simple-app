@@ -5,24 +5,17 @@
             <div class="columns is-mobile is-centered">
                 <div class="column is-half-desktop is-two-thirds-tablet is-three-quarters-mobile cards__wrapper">
                     <ul class="cards__list">
-                        <li class="cards__item">
-                            <h3 class="item__title">Заголовок</h3>
+                        <li class="cards__item" v-for="post in posts" key="post._id">
+                            <h3 class="item__title">{{post.title}}</h3>
                             <div class="item__content">
-                                <p>
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                                    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-                                    exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute
-                                    irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-                                    pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia
-                                    deserunt mollit anim id est laborum.
-                                </p>
+                                <p>{{post.description}}</p>
                             </div>
                             <div class="item__footer">
                                 <div class="item__date">32 дня назад</div>
                                 <div class="item__btn-group">
                                     <button class="button is-light">
                                         <b-icon pack="fa" icon="sign-language" size="is-medium" type="is-info"></b-icon>
-                                        <span class="button__text">28</span>
+                                        <span class="button__text">{{post.claps}}</span>
                                     </button>
                                     <button class="button is-light">
                                         <b-icon pack="fa" icon="edit" size="is-medium" type="is-info"></b-icon>
@@ -37,7 +30,7 @@
                         </li>
                     </ul>
 
-                    <pagination-comp :totalItems="12"></pagination-comp>
+                    <pagination-comp :totalItems="12" v-if="posts.length > 10"></pagination-comp>
                 </div>
             </div>
         </div>
@@ -45,11 +38,32 @@
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex';
+
 export default {
     components: {
         Navbar: () => import('components/Navbar.vue'),
-        PaginationComp: () => import('components/Pagination.vue')
-    }
+        PaginationComp: () => import('components/Pagination.vue'),
+    },
+    computed: {
+        ...mapState('posts', { posts: (state) => state.posts }),
+    },
+    methods: {
+        ...mapActions('posts', ['fetchPosts']),
+        async fetchData() {
+            // this.isLoading = true;
+            try {
+                await this.fetchPosts();
+            } catch (e) {
+                console.log(e)
+            } finally {
+                // this.isLoading = false;
+            }
+        },
+    },
+    created() {
+        this.fetchData();
+    },
 };
 </script>
 
