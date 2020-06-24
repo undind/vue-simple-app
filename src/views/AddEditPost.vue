@@ -6,18 +6,18 @@
                 <div class="column is-half-desktop is-two-thirds-tablet is-three-quarters-mobile">
                     <div class="cards__item">
                         <h3 class="title is-3 has-text-centered">Создать пост</h3>
-                        <form>
+                        <form @submit.prevent="onSubmit">
                             <b-field label="Заголовок">
-                                <b-input name="subject" expanded></b-input>
+                                <b-input name="subject" expanded v-model="postData.title"></b-input>
                             </b-field>
 
                             <b-field label="Содержание">
-                                <b-input name="message" type="textarea"></b-input>
+                                <b-input name="message" type="textarea" v-model="postData.description"></b-input>
                             </b-field>
 
                             <b-field>
                                 <p class="control">
-                                    <button type="submit" class="button is-info">
+                                    <button :disabled="isLoading" type="submit" class="button is-info">
                                         Сохранить
                                     </button>
                                 </p>
@@ -31,9 +31,39 @@
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex';
+import generateTooltipData from '@/helpers/generateTooltipData.js';
+
 export default {
     components: {
         Navbar: () => import('components/Navbar.vue'),
+    },
+    data() {
+        return {
+            postData: {
+                title: '',
+                description: '',
+            },
+            isLoading: false,
+        };
+    },
+    methods: {
+        ...mapActions('posts', ['createPost']),
+        async onSubmit() {
+            this.isLoading = true;
+            try {
+                await this.createPost(this.postData);
+                this.$buefy.toast.open(
+                    generateTooltipData(`Пост ${this.postData.title} был успешно создан!`, 'success')
+                );
+            } catch (error) {
+                this.$buefy.toast.open(generateTooltipData(error, 'danger'));
+                this.isLoading = false;
+            } finally {
+                this.$router.replace('/');
+                this.isLoading = false;
+            }
+        },
     },
 };
 </script>

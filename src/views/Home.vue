@@ -5,23 +5,23 @@
             <div class="columns is-mobile is-centered">
                 <div class="column is-half-desktop is-two-thirds-tablet is-three-quarters-mobile cards__wrapper">
                     <ul class="cards__list">
-                        <li class="cards__item" v-for="post in posts" key="post._id">
-                            <h3 class="item__title">{{post.title}}</h3>
+                        <li class="cards__item" v-for="post in posts" :key="post._id">
+                            <h3 class="item__title">{{ post.title }}</h3>
                             <div class="item__content">
-                                <p>{{post.description}}</p>
+                                <p>{{ post.description }}</p>
                             </div>
                             <div class="item__footer">
-                                <div class="item__date">32 дня назад</div>
+                                <div class="item__date">{{ moment(post.createdAt) }}</div>
                                 <div class="item__btn-group">
                                     <button class="button is-light">
                                         <b-icon pack="fa" icon="sign-language" size="is-medium" type="is-info"></b-icon>
-                                        <span class="button__text">{{post.claps}}</span>
+                                        <span class="button__text">{{ post.claps }}</span>
                                     </button>
                                     <button class="button is-light">
                                         <b-icon pack="fa" icon="edit" size="is-medium" type="is-info"></b-icon>
                                         <span class="button__text">Изменить</span>
                                     </button>
-                                    <button class="button is-light">
+                                    <button class="button is-light" @click="confirmCustomDelete(post)">
                                         <b-icon pack="fa" icon="trash-alt" size="is-medium" type="is-danger"></b-icon>
                                         <span class="button__text">Удалить</span>
                                     </button>
@@ -30,7 +30,7 @@
                         </li>
                     </ul>
 
-                    <pagination-comp :totalItems="12" v-if="posts.length > 10"></pagination-comp>
+                    <pagination-comp :totalItems="posts.length"></pagination-comp>
                 </div>
             </div>
         </div>
@@ -39,11 +39,17 @@
 
 <script>
 import { mapState, mapActions } from 'vuex';
+import generateTooltipData from '@/helpers/generateTooltipData.js';
 
 export default {
     components: {
         Navbar: () => import('components/Navbar.vue'),
         PaginationComp: () => import('components/Pagination.vue'),
+    },
+    filters: {
+        moment: function(date) {
+            return moment(date).format('MMMM Do YYYY, h:mm:ss a');
+        },
     },
     computed: {
         ...mapState('posts', { posts: (state) => state.posts }),
@@ -51,14 +57,24 @@ export default {
     methods: {
         ...mapActions('posts', ['fetchPosts']),
         async fetchData() {
-            // this.isLoading = true;
             try {
                 await this.fetchPosts();
             } catch (e) {
-                console.log(e)
-            } finally {
-                // this.isLoading = false;
+                this.$buefy.toast.open(generateTooltipData(`Что-то пошло не так!`, 'danger'));
             }
+        },
+        confirmCustomDelete(post) {
+            this.$buefy.dialog.confirm({
+                title: 'Deleting post',
+                message: 'Are you sure you want to <b>delete</b> this post?',
+                confirmText: 'Delete post',
+                type: 'is-danger',
+                hasIcon: false,
+                onConfirm: () => this.$buefy.toast.open(`Posts <b>${post.title}</b> deleted!`),
+            });
+        },
+        moment(date) {
+            return this.$moment(date).fromNow();
         },
     },
     created() {
