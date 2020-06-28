@@ -57,7 +57,7 @@ export default {
                     generateTooltipData(`Пост <b>${this.postData.title}</b> был успешно создан!`, 'success')
                 );
             } catch (error) {
-                this.$buefy.toast.open(generateTooltipData(error, 'danger'));
+                this.$buefy.toast.open(generateTooltipData(String(error), 'danger'));
                 this.isLoading = false;
             } finally {
                 this.$router.replace('/');

@@ -34,7 +34,7 @@
 
                     <b-modal
                         :active.sync="isComponentModalActive"
-                        full-screen 
+                        full-screen
                         :can-cancel="false"
                         has-modal-card
                         trap-focus
@@ -66,6 +66,7 @@ export default {
             formProps: {
                 postTitle: '',
                 postDescription: '',
+                postId: '',
             },
         };
     },
@@ -98,7 +99,7 @@ export default {
                         await this.deletePost(post._id);
                         this.$buefy.toast.open(generateTooltipData(`Пост <b>${post.title}</b> удален!`, 'success'));
                     } catch (error) {
-                        this.$buefy.toast.open(generateTooltipData(error, 'danger'));
+                        this.$buefy.toast.open(generateTooltipData(String(error), 'danger'));
                     }
                 },
             });
@@ -107,12 +108,13 @@ export default {
             try {
                 await this.updatePostClaps(post._id);
             } catch (error) {
-                this.$buefy.toast.open(generateTooltipData(error, 'danger'));
+                this.$buefy.toast.open(generateTooltipData(String(error), 'danger'));
             }
         },
         openModalEdit(post) {
             this.formProps.postTitle = post.title;
             this.formProps.postDescription = post.description;
+            this.formProps.postId = post._id;
             this.isComponentModalActive = true;
         },
         moment(date) {

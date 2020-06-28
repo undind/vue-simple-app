@@ -7,6 +7,18 @@ export default {
         SET_POSTS: (state, posts) => (state.posts = posts),
         CREATE_POST: (state, post) => state.posts.push(post),
         DELETE_POST: (state, id) => (state.posts = state.posts.filter((post) => post._id !== id)),
+        UPDATE_POST: (state, payload) =>
+            (state.posts = state.posts.map((post) => {
+                if (post._id === payload.id) {
+                    return {
+                        ...post,
+                        title: payload.title,
+                        description: payload.description,
+                    };
+                }
+
+                return post;
+            })),
         UPDATE_CLAPS: (state, id) =>
             (state.posts = state.posts.map((post) => {
                 if (post._id === id) {
@@ -34,6 +46,16 @@ export default {
             try {
                 const response = await this.$axios.post(`/api/post/create`, post);
                 commit('CREATE_POST', response.data);
+                return response;
+            } catch (error) {
+                throw error.response.data.message;
+            }
+        },
+
+        async updatePost({ commit }, { id, title, description }) {
+            try {
+                const response = await this.$axios.post(`/api/post/update/${id}`, { title, description });
+                commit('UPDATE_POST', { id, title, description });
                 return response;
             } catch (error) {
                 throw error.response.data.message;
