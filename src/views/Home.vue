@@ -13,11 +13,11 @@
                             <div class="item__footer">
                                 <div class="item__date">{{ moment(post.createdAt) }}</div>
                                 <div class="item__btn-group">
-                                    <button class="button is-light">
+                                    <button class="button is-light" @click="onClaps(post)">
                                         <b-icon pack="fa" icon="sign-language" size="is-medium" type="is-info"></b-icon>
                                         <span class="button__text">{{ post.claps }}</span>
                                     </button>
-                                    <button class="button is-light">
+                                    <button class="button is-light" @click="openModalEdit(post)">
                                         <b-icon pack="fa" icon="edit" size="is-medium" type="is-info"></b-icon>
                                         <span class="button__text">Изменить</span>
                                     </button>
@@ -31,6 +31,19 @@
                     </ul>
 
                     <pagination-comp :totalItems="posts.length"></pagination-comp>
+
+                    <b-modal
+                        :active.sync="isComponentModalActive"
+                        full-screen 
+                        :can-cancel="false"
+                        has-modal-card
+                        trap-focus
+                        :destroy-on-hide="false"
+                        aria-role="dialog"
+                        aria-modal
+                    >
+                        <modal-form v-bind="formProps"></modal-form>
+                    </b-modal>
                 </div>
             </div>
         </div>
@@ -45,6 +58,16 @@ export default {
     components: {
         Navbar: () => import('components/Navbar.vue'),
         PaginationComp: () => import('components/Pagination.vue'),
+        ModalForm: () => import('components/Modal.vue'),
+    },
+    data() {
+        return {
+            isComponentModalActive: false,
+            formProps: {
+                postTitle: '',
+                postDescription: '',
+            },
+        };
     },
     filters: {
         moment: function(date) {
@@ -55,7 +78,7 @@ export default {
         ...mapState('posts', { posts: (state) => state.posts }),
     },
     methods: {
-        ...mapActions('posts', ['fetchPosts', 'deletePost']),
+        ...mapActions('posts', ['fetchPosts', 'deletePost', 'updatePostClaps']),
         async fetchData() {
             try {
                 await this.fetchPosts();
@@ -65,20 +88,32 @@ export default {
         },
         confirmCustomDelete(post) {
             this.$buefy.dialog.confirm({
-                title: 'Deleting post',
-                message: 'Are you sure you want to <b>delete</b> this post?',
-                confirmText: 'Delete post',
+                title: 'Удалить пост',
+                message: 'Вы уверены, что хотите <b>удалить</b> этот пост?',
+                confirmText: 'Удалить пост',
                 type: 'is-danger',
                 hasIcon: false,
                 onConfirm: async () => {
                     try {
-                        this.deletePost(post._id);
-                        this.$buefy.toast.open(generateTooltipData(`Пост <b>${post.title}</b> удален!`, 'success'))
+                        await this.deletePost(post._id);
+                        this.$buefy.toast.open(generateTooltipData(`Пост <b>${post.title}</b> удален!`, 'success'));
                     } catch (error) {
-                        console.log(error)
+                        this.$buefy.toast.open(generateTooltipData(error, 'danger'));
                     }
                 },
             });
+        },
+        async onClaps(post) {
+            try {
+                await this.updatePostClaps(post._id);
+            } catch (error) {
+                this.$buefy.toast.open(generateTooltipData(error, 'danger'));
+            }
+        },
+        openModalEdit(post) {
+            this.formProps.postTitle = post.title;
+            this.formProps.postDescription = post.description;
+            this.isComponentModalActive = true;
         },
         moment(date) {
             return this.$moment(date).fromNow();
