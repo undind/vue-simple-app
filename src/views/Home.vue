@@ -8,7 +8,7 @@
                         <li class="cards__item" v-for="post in posts" :key="post._id">
                             <h3 class="item__title">{{ post.title }}</h3>
                             <div class="item__content">
-                                <p>{{ post.description }}</p>
+                                <p>{{ post.description | truncate }}</p>
                             </div>
                             <div class="item__footer">
                                 <div class="item__date">{{ moment(post.createdAt) }}</div>
@@ -73,6 +73,13 @@ export default {
     filters: {
         moment: function(date) {
             return moment(date).format('MMMM Do YYYY, h:mm:ss a');
+        },
+        truncate: function(text) {
+            if (text?.length > 500) {
+                return text.substring(0, 500) + '...';
+            }
+
+            return text;
         },
     },
     computed: {

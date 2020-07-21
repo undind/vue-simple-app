@@ -8,11 +8,25 @@
                         <h3 class="title is-3 has-text-centered">Создать пост</h3>
                         <form @submit.prevent="onSubmit">
                             <b-field label="Заголовок">
-                                <b-input name="subject" expanded v-model="postData.title"></b-input>
+                                <b-input
+                                    name="subject"
+                                    required
+                                    maxlength="100"
+                                    expanded
+                                    v-model="postData.title"
+                                    validation-message="Заголовок обязателен"
+                                ></b-input>
                             </b-field>
 
                             <b-field label="Содержание">
-                                <b-input name="message" type="textarea" v-model="postData.description"></b-input>
+                                <b-input
+                                    name="message"
+                                    required
+                                    maxlength="1000"
+                                    type="textarea"
+                                    v-model="postData.description"
+                                    validation-message="Заполните содержание"
+                                ></b-input>
                             </b-field>
 
                             <b-field>
@@ -56,11 +70,11 @@ export default {
                 this.$buefy.toast.open(
                     generateTooltipData(`Пост <b>${this.postData.title}</b> был успешно создан!`, 'success')
                 );
+                this.$router.replace('/');
             } catch (error) {
                 this.$buefy.toast.open(generateTooltipData(String(error), 'danger'));
                 this.isLoading = false;
             } finally {
-                this.$router.replace('/');
                 this.isLoading = false;
             }
         },

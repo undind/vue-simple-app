@@ -4,7 +4,7 @@
             <div class="column is-half-desktop is-two-thirds-tablet is-three-quarters-mobile">
                 <b-button expanded tag="router-link" to="/" type="is-info" class="link__home">На главную</b-button>
                 <div class="cards__item">
-                    <form>
+                    <form @submit.prevent="onSubmit">
                         <b-field>
                             <b-input
                                 size="is-medium"
@@ -12,6 +12,7 @@
                                 type="text"
                                 icon-pack="fas"
                                 icon="user"
+                                v-model="postData.email"
                             >
                             </b-input>
                         </b-field>
@@ -24,15 +25,16 @@
                                 type="password"
                                 icon-pack="fas"
                                 icon="unlock-alt"
+                                v-model="postData.password"
                             >
                             </b-input>
                         </b-field>
 
                         <b-field>
                             <p class="control">
-                                <b-button expanded type="submit" class="button is-info">
+                                <button type="submit" class="button is-info">
                                     Войти
-                                </b-button>
+                                </button>
                             </p>
                         </b-field>
                     </form>
@@ -43,7 +45,29 @@
 </template>
 
 <script>
-export default {};
+import { mapActions } from 'vuex';
+import generateTooltipData from '@/helpers/generateTooltipData.js';
+
+export default {
+    data() {
+        return {
+            postData: {
+                email: '',
+                password: '',
+            },
+        };
+    },
+    methods: {
+        ...mapActions('auth', ['signinUser']),
+        async onSubmit() {
+            try {
+                await this.signinUser(this.postData);
+            } catch (error) {
+                this.$buefy.toast.open(generateTooltipData(String(error), 'danger'));
+            }
+        },
+    },
+};
 </script>
 
 <style lang="postcss" scoped>
