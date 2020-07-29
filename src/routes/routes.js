@@ -15,6 +15,11 @@ export default [
         component: () => import('@/views/AddEditPost.vue')
     },
     {
+        path: '/post-view',
+        name: 'view',
+        component: () => import('@/views/ViewPost.vue')
+    },
+    {
         path: '*',
         redirect: '/'
     }

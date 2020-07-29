@@ -5,7 +5,7 @@
             <div class="columns is-mobile is-centered">
                 <div class="column is-half-desktop is-two-thirds-tablet is-three-quarters-mobile cards__wrapper">
                     <ul class="cards__list">
-                        <li class="cards__item" v-for="post in posts" :key="post._id">
+                        <li @click="toActivePostRead(post._id)" class="cards__item" v-for="post in posts" :key="post._id">
                             <h3 class="item__title">{{ post.title }}</h3>
                             <div class="item__content">
                                 <p>{{ post.description | truncate }}</p>
@@ -17,11 +17,19 @@
                                         <b-icon pack="fa" icon="sign-language" size="is-medium" type="is-info"></b-icon>
                                         <span class="button__text">{{ post.claps }}</span>
                                     </button>
-                                    <button class="button is-light" @click="openModalEdit(post)">
+                                    <button
+                                        v-if="isAuth && userRole === 'writer'"
+                                        class="button is-light"
+                                        @click="openModalEdit(post)"
+                                    >
                                         <b-icon pack="fa" icon="edit" size="is-medium" type="is-info"></b-icon>
                                         <span class="button__text">Изменить</span>
                                     </button>
-                                    <button class="button is-light" @click="confirmCustomDelete(post)">
+                                    <button
+                                        v-if="isAuth && userRole === 'writer'"
+                                        class="button is-light"
+                                        @click="confirmCustomDelete(post)"
+                                    >
                                         <b-icon pack="fa" icon="trash-alt" size="is-medium" type="is-danger"></b-icon>
                                         <span class="button__text">Удалить</span>
                                     </button>
@@ -84,9 +92,10 @@ export default {
     },
     computed: {
         ...mapState('posts', { posts: (state) => state.posts }),
+        ...mapState('auth', { userRole: (state) => state.userRole, isAuth: (state) => state.isAuth }),
     },
     methods: {
-        ...mapActions('posts', ['fetchPosts', 'deletePost', 'updatePostClaps']),
+        ...mapActions('posts', ['fetchPosts', 'deletePost', 'updatePostClaps', 'setActivePost']),
         async fetchData() {
             try {
                 await this.fetchPosts();
@@ -127,6 +136,10 @@ export default {
         moment(date) {
             return this.$moment(date).fromNow();
         },
+        toActivePostRead(id) {
+            this.setActivePost(id);
+            this.$router.replace('/post-view');
+        },
     },
     created() {
         this.fetchData();
@@ -142,6 +155,12 @@ export default {
         border-radius: 3px;
         margin-bottom: 20px;
         box-shadow: 0 2.8px 2.2px rgba(0, 0, 0, 0.034);
+        cursor: pointer;
+        transition: all 0.2s;
+
+        &:hover {
+            box-shadow: 0 2px 2px rgba(0, 0, 0, 0.24);
+        }
 
         .item {
             &__title {

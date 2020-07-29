@@ -1,7 +1,7 @@
 <template>
     <nav class="my-navbar">
         <b-button
-            v-if="hideAddBtn === false"
+            v-if="hideAddBtn === false && this.isAuth === true && this.userRole === 'writer'"
             @click.prevent="replaceToPostEditAdd()"
             type="is-primary"
             inverted
@@ -16,30 +16,41 @@
         >
             На главную
         </router-link>
-        <a href="#" @click.prevent="replaceToSignIn()" class="my-navbar__link">Логин</a>
+        <a v-if="this.isAuth === false" href="#" @click.prevent="replaceToSignIn()" class="my-navbar__link">Логин</a>
+        <a v-else-if="this.isAuth === true" href="#" @click.prevent="logOutAndReplace()" class="my-navbar__link">Выйти</a>
     </nav>
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex';
+
 export default {
     props: {
         hideAddBtn: {
             default: false,
-            type: Boolean
+            type: Boolean,
         },
         hideBackToHome: {
             default: false,
-            type: Boolean
-        }
+            type: Boolean,
+        },
+    },
+    computed: {
+        ...mapState('auth', { userRole: (state) => state.userRole, isAuth: (state) => state.isAuth }),
     },
     methods: {
+        ...mapActions('auth', ['logoutUser']),
         replaceToPostEditAdd() {
             this.$router.replace('/post');
         },
         replaceToSignIn() {
             this.$router.replace('/signin');
-        }
-    }
+        },
+        async logOutAndReplace() {
+            await this.logoutUser();
+            this.$router.replace('/');
+        },
+    },
 };
 </script>
 

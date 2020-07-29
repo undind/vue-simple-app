@@ -2,6 +2,7 @@ export default {
     namespaced: true,
     state: {
         posts: [],
+        activePost: {},
     },
     mutations: {
         SET_POSTS: (state, posts) => (state.posts = posts),
@@ -30,6 +31,7 @@ export default {
 
                 return post;
             })),
+        ACTIVE_POST: (state, id) => state.activePost = state.posts.find((p) => p._id === id),
     },
     actions: {
         async fetchPosts({ commit }) {
@@ -80,6 +82,10 @@ export default {
             } catch (error) {
                 throw error.response.data.message;
             }
+        },
+
+        setActivePost({ commit }, id) {
+            commit('ACTIVE_POST', id);
         },
     },
 };

@@ -12,7 +12,9 @@
                                 type="text"
                                 icon-pack="fas"
                                 icon="user"
+                                required
                                 v-model="postData.email"
+                                validation-message="Введите логин"
                             >
                             </b-input>
                         </b-field>
@@ -23,9 +25,11 @@
                                 password-reveal
                                 placeholder="Введите пароль"
                                 type="password"
+                                required
                                 icon-pack="fas"
                                 icon="unlock-alt"
                                 v-model="postData.password"
+                                validation-message="Введите пароль"
                             >
                             </b-input>
                         </b-field>
@@ -62,6 +66,8 @@ export default {
         async onSubmit() {
             try {
                 await this.signinUser(this.postData);
+                this.$buefy.toast.open(generateTooltipData(String(`Добро пожаловать ${this.postData.email}!`), 'success'));
+                this.$router.replace('/');
             } catch (error) {
                 this.$buefy.toast.open(generateTooltipData(String(error), 'danger'));
             }
