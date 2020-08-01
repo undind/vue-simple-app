@@ -5,9 +5,9 @@
             <div class="columns is-mobile is-centered">
                 <div class="column is-half-desktop is-two-thirds-tablet is-three-quarters-mobile cards__wrapper">
                     <ul class="cards__list">
-                        <li @click="toActivePostRead(post._id)" class="cards__item" v-for="post in posts" :key="post._id">
-                            <h3 class="item__title">{{ post.title }}</h3>
-                            <div class="item__content">
+                        <li class="cards__item" v-for="post in posts" :key="post._id">
+                            <h3 class="item__title" @click="toActivePostRead(post._id)">{{ post.title }}</h3>
+                            <div class="item__content" @click="toActivePostRead(post._id)">
                                 <p>{{ post.description | truncate }}</p>
                             </div>
                             <div class="item__footer">
@@ -155,7 +155,6 @@ export default {
         border-radius: 3px;
         margin-bottom: 20px;
         box-shadow: 0 2.8px 2.2px rgba(0, 0, 0, 0.034);
-        cursor: pointer;
         transition: all 0.2s;
 
         &:hover {
@@ -168,6 +167,7 @@ export default {
                 font-weight: 500;
                 line-height: 1;
                 margin-bottom: 10px;
+                cursor: pointer;
             }
 
             &__date {
@@ -176,6 +176,7 @@ export default {
             }
 
             &__content {
+                cursor: pointer;
                 margin-bottom: 10px;
             }
 

@@ -17,7 +17,9 @@
             На главную
         </router-link>
         <a v-if="this.isAuth === false" href="#" @click.prevent="replaceToSignIn()" class="my-navbar__link">Логин</a>
-        <a v-else-if="this.isAuth === true" href="#" @click.prevent="logOutAndReplace()" class="my-navbar__link">Выйти</a>
+        <a v-else-if="this.isAuth === true" href="#" @click.prevent="logOutAndReplace()" class="my-navbar__link"
+            >Выйти</a
+        >
     </nav>
 </template>
 
@@ -48,7 +50,7 @@ export default {
         },
         async logOutAndReplace() {
             await this.logoutUser();
-            this.$router.replace('/');
+            if (this.$route.path !== '/') this.$router.replace('/');
         },
     },
 };

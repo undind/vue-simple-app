@@ -1,6 +1,6 @@
 <template>
     <b-pagination
-        v-if="totalItems > 10"
+        v-if="totalItems > 4"
         :total="totalItems"
         :current.sync="current"
         :range-before="rangeBefore"
@@ -28,7 +28,7 @@ export default {
     data() {
         return {
             current: 1,
-            perPage: 10,
+            perPage: 5,
             rangeBefore: 2,
             rangeAfter: 2,
             order: 'is-centered',

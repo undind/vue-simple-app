@@ -17,6 +17,8 @@
 <script>
 import { mapState } from 'vuex';
 
+import isEmptyObject from '@/helpers/isEmptyObject';
+
 export default {
     components: {
         Navbar: () => import('components/Navbar.vue'),
@@ -25,6 +27,9 @@ export default {
         ...mapState('posts', { activePost: (state) => state.activePost }),
     },
     methods: {},
+    mounted() {
+        if (isEmptyObject(this.activePost)) this.$router.replace('/');
+    },
 };
 </script>
 
